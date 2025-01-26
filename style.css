@@ -15,17 +15,12 @@ body {
 }
 
 /* Minimap styles */
-#minimapContainer {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 250px;
-    height: 250px;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    z-index: 1000;
+.minimap-circle,
+.minimap-marker,
+.minimap-destination,
+#minimapContainer,
+.minimap-expanded {
+    display: none;
 }
 
 /* Fixed star HUD */
