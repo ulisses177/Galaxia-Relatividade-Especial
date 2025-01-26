@@ -1,15 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Relativistic Galaxy Simulation</title>
-    <style>
-        body { margin: 0; background: black; overflow: hidden; }
-        #info { position: absolute; top: 10px; left: 10px; color: white; font-family: monospace; white-space: pre-line; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulação Galáctica Relativística</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <div id="info"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="galaxy.js"></script>
+    <div id="minimapContainer"></div>
+    <div id="dialogBox" class="hidden">
+        <img id="dialogPortrait" src="" alt="Portrait">
+        <p id="dialogText"></p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/core.js"></script>
+    <script src="js/galaxy.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
