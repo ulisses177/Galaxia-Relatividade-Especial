@@ -7,6 +7,7 @@ class UI {
         this.setupDialog();
         this.setupHUD();
         this.setupMinimapInteraction();
+        this.setupUIVisibility();
     }
 
     setupMinimap() {
@@ -272,16 +273,8 @@ class UI {
                     hudElement.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
                 }
             } else {
-                // Star is behind camera, show at screen edge with arrow
-                const angle = Math.atan2(screenPosition.y, screenPosition.x);
-                const margin = 100;
-                const x = window.innerWidth/2 + Math.cos(angle) * (window.innerWidth/2 - margin);
-                const y = window.innerHeight/2 - Math.sin(angle) * (window.innerHeight/2 - margin);
-                
-                hudElement.style.display = 'block';
-                hudElement.style.left = `${x}px`;
-                hudElement.style.top = `${y}px`;
-                hudElement.style.transform = `translate(-50%, -50%) rotate(${angle * 180/Math.PI}deg)`;
+                // Star is behind camera, hide it
+                hudElement.style.display = 'none';
             }
         });
 
@@ -310,6 +303,26 @@ Fator γ: ${gamma.toFixed(3)}`;
         
         // Update HUD elements
         this.updateHUD(camera);
+    }
+
+    setupUIVisibility() {
+        // Define a deadzone de 20% do tamanho da tela no centro
+        const deadzoneSize = 0.2;
+        
+        document.addEventListener('mousemove', (e) => {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const deadzoneWidth = window.innerWidth * deadzoneSize;
+            const deadzoneHeight = window.innerHeight * deadzoneSize;
+
+            // Verifica se o mouse está fora da deadzone
+            const isOutsideDeadzone = 
+                Math.abs(e.clientX - centerX) > deadzoneWidth / 2 ||
+                Math.abs(e.clientY - centerY) > deadzoneHeight / 2;
+
+            // Adiciona ou remove a classe para controlar a visibilidade
+            document.body.classList.toggle('ui-hidden', isOutsideDeadzone);
+        });
     }
 }
 
