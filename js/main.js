@@ -142,3 +142,6 @@ animate();
 // Make time variables available globally for UI
 window.properTime = properTime;
 window.coordinateTime = coordinateTime;
+
+// Após criar Core.scene ...
+Player.init(Core.scene);
