@@ -75,5 +75,7 @@ window.Core = {
     calculateTimeDilation,
     lorentzTransform,
     dopplerShift,
-    formatTime
+    formatTime,
+    scene: null,  // Será definido em main.js
+    renderer: null // Será definido em main.js
 };
