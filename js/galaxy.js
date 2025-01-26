@@ -32,101 +32,67 @@ const FIXED_STARS = [
         -400, 0, 1300,
         'G', 
         "Nossa estrela"
+    ),
+    new FixedStar(
+        "Proxima Centauri",
+        -411, 0, 1310,
+        'M',
+        "Estrela mais próxima do Sol, parte do sistema Alpha Centauri"
+    ),
+    new FixedStar(
+        "Betelgeuse",
+        -800, 10, 1600,
+        'M',
+        "Supergigante vermelha na constelação de Órion"
+    ),
+    new FixedStar(
+        "Sirius",
+        -420, 5, 1400,
+        'A',
+        "Estrela mais brilhante no céu noturno terrestre"
+    ),
+    new FixedStar(
+        "Vega",
+        -300, 8, 1100,
+        'A',
+        "Uma das estrelas mais brilhantes vistas da Terra"
+    ),
+    new FixedStar(
+        "Antares",
+        -200, -5, 900,
+        'M',
+        "Supergigante vermelha no coração da constelação de Escorpião"
     )
 ];
 
 class GalaxyGenerator {
     constructor(options = {}, randomGen) {
-        this.randomGen = randomGen || new RandomGenerator();
-        this.centerDensity = options.centerDensity || 30;
-        this.peripheryDensity = options.peripheryDensity || 4;
-        this.galaxyRadius = options.galaxyRadius || 2500;
-        this.armSpread = options.armSpread || 0.5;
-        this.armCount = options.armCount || 4;
-        this.armTwist = options.armTwist || 2 * Math.PI;
+        this.randomGen = randomGen || new RandomGenerator(42);
+        this.galaxyRadius = options.galaxyRadius || 10000;
+        this.diskHeight = 800;
     }
 
-    calculateDensity(x, y, z) {
-        const distanceFromCenter = Math.sqrt(x*x + y*y + z*z);
-        const normalizedDistance = distanceFromCenter / this.galaxyRadius;
-        
-        const theta = Math.atan2(z, x);
-        const r = Math.sqrt(x*x + z*z);
-        let inArm = false;
-        
-        for (let i = 0; i < this.armCount; i++) {
-            const armAngle = (i * 2 * Math.PI) / this.armCount;
-            const spiralAngle = armAngle + (r / this.galaxyRadius) * this.armTwist;
-            const angleDiff = Math.abs(((theta - spiralAngle + Math.PI) % (2 * Math.PI)) - Math.PI);
-            
-            if (angleDiff < this.armSpread) {
-                inArm = true;
-                break;
-            }
-        }
-        
-        let density = this.centerDensity * Math.exp(-normalizedDistance * 2);
-        if (inArm) {
-            density *= 1.5;
-        }
-        
-        return Math.max(density, this.peripheryDensity);
-    }
-
-    generateStars(totalStars = 2000) {
+    generateStars(totalStars = 1000000) {
         const stars = [];
-        const maxTries = totalStars * 2;
-        let tries = 0;
-
-        const getRadialPosition = () => {
-            const r = -Math.log(1 - this.randomGen.random() * 0.95) * (this.galaxyRadius * 0.3);
-            return Math.min(r, this.galaxyRadius);
-        };
-
-        while (stars.length < totalStars && tries < maxTries) {
-            tries++;
-            
-            const r = getRadialPosition();
+        
+        for (let i = 0; i < totalStars; i++) {
+            const r = Math.sqrt(this.randomGen.random()) * this.galaxyRadius;
             const theta = this.randomGen.random() * 2 * Math.PI;
-            const phi = Math.acos(1 - 2 * this.randomGen.random());
-
-            const x = r * Math.sin(phi) * Math.cos(theta);
-            const y = r * Math.sin(phi) * Math.sin(theta);
-            const z = r * Math.cos(phi);
-
-            const density = this.calculateDensity(x, y, z);
-            let probability = Math.min(1.0, density / this.centerDensity);
             
-            const theta2D = Math.atan2(z, x);
-            const r2D = Math.sqrt(x*x + z*z);
-            let inArm = false;
+            const x = r * Math.cos(theta);
+            const z = r * Math.sin(theta);
             
-            for (let i = 0; i < this.armCount; i++) {
-                const armAngle = (i * 2 * Math.PI) / this.armCount;
-                const spiralAngle = armAngle + (r2D / this.galaxyRadius) * this.armTwist;
-                const angleDiff = Math.abs(((theta2D - spiralAngle + Math.PI) % (2 * Math.PI)) - Math.PI);
-                
-                if (angleDiff < this.armSpread) {
-                    inArm = true;
-                    break;
-                }
-            }
-
-            if (inArm) {
-                probability *= 1.5;
-            }
-
-            if (this.randomGen.random() < probability) {
-                const spectralType = this.generateSpectralType();
-                stars.push({
-                    x, y, z,
-                    spectralType,
-                    color: this.getStarColor(spectralType)
-                });
-            }
+            const y = (this.randomGen.random() - 0.5) * this.diskHeight;
+            
+            const spectralType = this.generateSpectralType();
+            stars.push({
+                x, y, z,
+                spectralType,
+                color: this.getStarColor(spectralType),
+                size: this.randomGen.random() * 0.5 + 0.5
+            });
         }
 
-        console.log(`Generated ${stars.length} stars in ${tries} tries`);
         return stars;
     }
 
