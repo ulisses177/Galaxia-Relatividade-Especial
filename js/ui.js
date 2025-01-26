@@ -3,6 +3,8 @@
             this.setupDialog();
             this.setupHUD();
             this.setupUIVisibility();
+            this.lastNearbyStarMessage = null;
+            this.starProximityThreshold = 50; // 10x maior para corresponder à nova escala
         }
 
         setupHUD() {
@@ -40,7 +42,7 @@
                     portrait: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Ccircle cx='25' cy='25' r='20' fill='%234CAF50'/%3E%3C/svg%3E"
                 },
                 {
-                    text: "Toque e arraste para olhar ao redor. Toque no minimapa para navegar pela galáxia.",
+                    text: "Toque e arraste para olhar ao redor. Toque nas estrelas para navegar pela galáxia.",
                     portrait: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Ccircle cx='25' cy='25' r='20' fill='%234CAF50'/%3E%3C/svg%3E"
                 },
                 {
@@ -110,13 +112,42 @@
                 }
             });
 
+            // Verificar proximidade com estrelas
+            let nearestStar = null;
+            let minDistance = Infinity;
+
+            this.starHUDs.forEach((hudElement, star) => {
+                const distance = Player.position.distanceTo(star.position);
+                if (distance < this.starProximityThreshold && distance < minDistance) {
+                    nearestStar = star;
+                    minDistance = distance;
+                }
+            });
+
+            // Mostrar mensagem da estrela mais próxima
+            if (nearestStar && this.lastNearbyStarMessage !== nearestStar) {
+                this.lastNearbyStarMessage = nearestStar;
+                const starMessage = {
+                    text: `${nearestStar.name}\n${nearestStar.description}`,
+                    portrait: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Ccircle cx='25' cy='25' r='20' fill='%23" + 
+                        (nearestStar.name === "Sol" ? "FFD700" : 
+                         nearestStar.name === "Sagittarius A*" ? "000000" : "4CAF50") + 
+                        "'/%3E%3C/svg%3E"
+                };
+                this.showMessage(starMessage);
+            } else if (!nearestStar) {
+                this.lastNearbyStarMessage = null;
+                if (this.dialogBox.classList.contains('visible')) {
+                    this.dialogBox.classList.remove('visible');
+                    this.dialogBox.classList.add('hidden');
+                }
+            }
+
             // Update info display
             const speed = Player.velocity.length();
             const gamma = Core.calculateTimeDilation(Player.velocity);
             
             this.infoDisplay.textContent = `Velocidade: ${(speed/Core.c).toFixed(3)}c
-    Tempo da Nave: ${Core.formatTime(properTime)}
-    Tempo da Galáxia: ${Core.formatTime(coordinateTime)}
     Fator γ: ${gamma.toFixed(3)}`;
         }
 
