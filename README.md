@@ -2,6 +2,8 @@
 
 Uma simulação interativa da Via Láctea que demonstra os efeitos da Relatividade Especial, incluindo dilatação do tempo, contração do comprimento e efeito Doppler relativístico.
 
+🚀 **[Experimente a simulação aqui!](https://ulisses177.github.io/Galaxia-Relatividade-Especial/)**
+
 ![Simulação da Galáxia](imagem.png)
 
 ## Características
@@ -56,4 +58,9 @@ Este projeto está licenciado sob a MIT License - veja o arquivo [LICENSE](LICEN
 
 ## Créditos
 
-Desenvolvido por [Seu Nome] como parte de um projeto para demonstrar conceitos de Relatividade Especial de forma interativa e educativa.
+Desenvolvido por Ulisses Brandão como parte de um projeto para demonstrar conceitos de Relatividade Especial de forma interativa e educativa.
+
+## Links
+
+- [Simulação Online](https://ulisses177.github.io/Galaxia-Relatividade-Especial/)
+- [Repositório GitHub](https://github.com/ulisses177/Galaxia-Relatividade-Especial)
