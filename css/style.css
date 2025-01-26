@@ -1,0 +1,126 @@
+body { 
+    margin: 0; 
+    background: black; 
+    overflow: hidden; 
+    font-family: Arial, sans-serif;
+}
+
+#info { 
+    position: absolute; 
+    top: 10px; 
+    left: 10px; 
+    color: white; 
+    font-family: monospace; 
+    white-space: pre-line; 
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Fixed star HUD */
+.fixed-star-hud {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #4CAF50;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    margin: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: none;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    pointer-events: auto;
+    z-index: 1000;
+}
+
+.fixed-star-hud:hover {
+    background: rgba(76, 175, 80, 0.2);
+    border-color: #FFC107;
+    transform: scale(1.1);
+}
+
+.fixed-star-hud::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(to bottom, #4CAF50, transparent);
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+}
+
+.fixed-star-hud span {
+    display: block;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+.fixed-star-hud .name {
+    font-size: 1.1em;
+    margin-bottom: 4px;
+}
+
+.fixed-star-hud .distance {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+/* Dialog styles */
+#dialogBox {
+    position: fixed;
+    left: 40%;
+    bottom: 100px;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #4CAF50;
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+    max-width: 400px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    transition: opacity 0.5s;
+}
+
+#dialogBox.hidden {
+    display: none;
+    opacity: 0;
+}
+
+#dialogBox.visible {
+    display: flex;
+    opacity: 1;
+}
+
+#dialogPortrait {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    background: #4CAF50;
+}
+
+#dialogText {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+/* UI visibility */
+.ui-hidden .fixed-star-hud,
+.ui-hidden #info,
+.ui-hidden #dialogBox {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Transições suaves */
+.fixed-star-hud,
+#info,
+#dialogBox {
+    transition: opacity 0.3s ease;
+} 
