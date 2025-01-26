@@ -58,7 +58,7 @@ Este projeto está licenciado sob a MIT License - veja o arquivo [LICENSE](LICEN
 
 ## Créditos
 
-Desenvolvido por Ulisses Casemiro como parte de um projeto para demonstrar conceitos de Relatividade Especial de forma interativa e educativa.
+Desenvolvido como parte de um projeto para demonstrar conceitos de Relatividade Especial de forma interativa e educativa e como uma entrada para GGJcwb de 2025.
 
 ## Links
 
