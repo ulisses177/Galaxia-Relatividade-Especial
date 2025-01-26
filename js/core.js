@@ -21,28 +21,34 @@ function lorentzTransform(basePos, vel, pos) {
     const perpendicular = relativePos.clone().sub(parallel);
     const contracted = parallel.multiplyScalar(gamma).add(perpendicular.divideScalar(gamma));
     
-    const relativeVel = vel.dot(relativePos.normalize());
+    // Simplificar o cálculo da velocidade relativa
+    const relativeVel = vel.length() * Math.cos(direction.angleTo(relativePos));
     
-    return { position: contracted, relativeVel: relativeVel };
+    return { 
+        position: contracted, 
+        relativeVel: relativeVel 
+    };
 }
 
 function dopplerShift(relativeVelocity) {
     const beta = relativeVelocity / c;
-    const gamma = 1 / Math.sqrt(1 - beta * beta);
-    const factor = gamma * (1 - beta);
     
-    let r = 1, b = 1;
-    const intensity = factor > 1 ? 1/(factor*factor) : 1;
+    // Simplificar para usar apenas o fator beta diretamente
+    let r = 1, g = 1, b = 1;
     
-    if (factor > 1) {
-        b = 1/factor;
-    } else {
-        r = factor;
+    if (beta > 0) { // Afastando
+        r = 1;
+        g = Math.max(0.2, 1 - beta);
+        b = Math.max(0.2, 1 - beta * 2);
+    } else { // Aproximando
+        r = Math.max(0.2, 1 + beta);
+        g = Math.max(0.2, 1 + beta * 0.5);
+        b = 1;
     }
     
     return {
-        color: new THREE.Color(r, r, b),
-        intensity: intensity
+        color: new THREE.Color(r, g, b),
+        intensity: 1.0
     };
 }
 

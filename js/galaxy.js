@@ -68,11 +68,11 @@ const FIXED_STARS = [
 class GalaxyGenerator {
     constructor(options = {}, randomGen) {
         this.randomGen = randomGen || new RandomGenerator(42);
-        this.galaxyRadius = options.galaxyRadius || 10000;
-        this.diskHeight = 800;
+        this.galaxyRadius = options.galaxyRadius || 200000;
+        this.diskHeight = 1000;
     }
 
-    generateStars(totalStars = 1000000) {
+    generateStars(totalStars = 2500000) {
         const stars = [];
         
         for (let i = 0; i < totalStars; i++) {

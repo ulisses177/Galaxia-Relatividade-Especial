@@ -9,14 +9,14 @@ document.body.appendChild(renderer.domElement);
 const randomGen = new RandomGenerator(42);
 const galaxyGenerator = new GalaxyGenerator({
     centerDensity: 30,
-    peripheryDensity: 4,
-    galaxyRadius: 2500,
+    peripheryDensity: 30,
+    galaxyRadius: 5000,
     armSpread: 0.5,
     armCount: 4,
     armTwist: 2 * Math.PI
 }, randomGen);
 
-const galaxyData = galaxyGenerator.generateStars(2000); // Especifica número de estrelas
+const galaxyData = galaxyGenerator.generateStars(9000) // Especifica número de estrelas
 
 // Create stars
 const stars = galaxyData.map(star => {
@@ -48,6 +48,7 @@ FIXED_STARS.forEach(star => {
     const material = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.copy(star.position);
+    star.mesh = mesh; // Armazenar referência do mesh na estrela
     scene.add(mesh);
 });
 
@@ -101,6 +102,18 @@ function animate() {
         const doppler = Core.dopplerShift(transformed.relativeVel);
         star.material.color.copy(doppler.color);
         star.material.opacity = doppler.intensity;
+    });
+
+    // Aplicar efeito Doppler às estrelas fixas
+    FIXED_STARS.forEach(star => {
+        const transformed = Core.lorentzTransform(star.position, Player.velocity, Player.position);
+        const doppler = Core.dopplerShift(-transformed.relativeVel);
+        
+        // Atualizar cor e brilho da estrela fixa
+        if (star.mesh) {
+            star.mesh.material.color.copy(doppler.color);
+            star.mesh.material.opacity = doppler.intensity;
+        }
     });
 
     // Update UI

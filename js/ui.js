@@ -156,8 +156,9 @@
         }
 
         setupUIVisibility() {
-            // Define a deadzone de 20% do tamanho da tela no centro
-            const deadzoneSize = 0.2;
+            // Aumentar a deadzone para 40% do tamanho da tela
+            const deadzoneSize = 0.4;
+            let isUIVisible = true;
             
             // Função auxiliar para verificar se está fora da deadzone
             const checkDeadzone = (x, y) => {
@@ -170,22 +171,51 @@
                        Math.abs(y - centerY) > deadzoneHeight / 2;
             };
 
-            // Mouse events para desktop
+            // Toggle UI visibility with single click
+            document.addEventListener('click', (e) => {
+                // Ignore clicks on dialog box or star HUDs
+                if (e.target.closest('#dialogBox') || e.target.closest('.fixed-star-hud')) {
+                    return;
+                }
+                
+                isUIVisible = !isUIVisible;
+                document.body.classList.toggle('ui-hidden', !isUIVisible);
+            });
+
+            // Double click to disable autopilot
+            let lastClickTime = 0;
+            document.addEventListener('click', (e) => {
+                const currentTime = Date.now();
+                if (currentTime - lastClickTime < 300) { // 300ms for double click
+                    if (Player.currentAutopilot) {
+                        Player.currentAutopilot = null;
+                        Player.selectedStar = null;
+                        Player.velocity.set(0, 0, 0);
+                    }
+                    e.preventDefault();
+                }
+                lastClickTime = currentTime;
+            });
+
+            // Mouse movement deadzone
             document.addEventListener('mousemove', (e) => {
+                if (!isUIVisible) return; // Don't check deadzone if UI is hidden
                 const isOutsideDeadzone = checkDeadzone(e.clientX, e.clientY);
                 document.body.classList.toggle('ui-hidden', isOutsideDeadzone);
             });
 
-            // Touch events para mobile
+            // Touch events
             document.addEventListener('touchmove', (e) => {
+                if (!isUIVisible) return; // Don't check deadzone if UI is hidden
                 const touch = e.touches[0];
                 const isOutsideDeadzone = checkDeadzone(touch.clientX, touch.clientY);
                 document.body.classList.toggle('ui-hidden', isOutsideDeadzone);
             });
 
-            // Esconde a UI quando o toque termina
+            // Reset UI visibility on touch end if it was hidden by deadzone
             document.addEventListener('touchend', () => {
-                document.body.classList.add('ui-hidden');
+                if (!isUIVisible) return; // Don't reset if UI was hidden by click
+                document.body.classList.remove('ui-hidden');
             });
         }
     }
