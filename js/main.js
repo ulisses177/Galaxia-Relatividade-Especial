@@ -16,7 +16,7 @@ const galaxyGenerator = new GalaxyGenerator({
     armTwist: 2 * Math.PI
 }, randomGen);
 
-const galaxyData = galaxyGenerator.generateStars(2000) // Especifica número de estrelas
+const galaxyData = galaxyGenerator.generateStars(1000) // Especifica número de estrelas
 
 // Create stars
 const stars = galaxyData.map(star => {
